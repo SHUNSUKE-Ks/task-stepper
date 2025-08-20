@@ -1,0 +1,5 @@
+{
+  "textInputShortcuts": {
+    "submit": "Enter"     // テキスト入力の確定（例：メモの投稿、新しいTODOの追加）
+  }
+}
