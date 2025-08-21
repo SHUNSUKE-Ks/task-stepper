@@ -1,5 +1,5 @@
 import { useLocalSearchParams, router } from 'expo-router';
-import { View, Text, Pressable, FlatList, Alert, ActivityIndicator, TextInput, Keyboard } from 'react-native';
+import { View, Text, Pressable, FlatList, Alert, ActivityIndicator, TextInput, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
 import { common } from '@/GameStyles/common';
 import React, { useMemo, useState } from 'react';
 import MemoBar from '@/components/MemoBar';
@@ -67,7 +67,11 @@ export default function StepperDetail() {
   }
 
   return (
-    <View style={common.container}>
+    <KeyboardAvoidingView
+      style={common.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+    >
       <View style={{ padding: 16 }}>
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Stepper: {id}</Text>
         <Text style={{ marginTop: 16, marginBottom: 8, fontSize: 18 }}>Memo</Text>
@@ -114,7 +118,7 @@ export default function StepperDetail() {
           <Text>戻る</Text>
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
