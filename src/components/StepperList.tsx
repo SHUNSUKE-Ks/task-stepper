@@ -3,7 +3,7 @@ import { common } from '@/GameStyles/common';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons'; // For delete icon
 
-type Stepper = { id: string; title: string; progress?: number };
+import { Stepper } from '@/contexts/StepperContext';
 
 type Props = {
   steppers: Stepper[];

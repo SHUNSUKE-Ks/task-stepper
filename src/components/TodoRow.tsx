@@ -43,6 +43,7 @@ export default function TodoRow({ id, label, checked, onToggle, onEdit, onDelete
           autoFocus
           onBlur={handleSaveEdit} // Save on blur
           onSubmitEditing={handleSaveEdit} // Save on Enter
+          multiline={true}
         />
       ) : (
         <Text style={[styles.label, checked && styles.labelChecked]}>{label}</Text>
@@ -94,5 +95,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     paddingVertical: 0,
+    minHeight: 20, // Adjust as needed
+    textAlignVertical: 'top',
   },
 });

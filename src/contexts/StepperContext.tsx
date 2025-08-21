@@ -5,6 +5,8 @@ export type Stepper = {
   id: string;
   title: string;
   progress?: number; // Optional progress for display
+  totalTodos: number; // New
+  completedTodos: number; // New
 };
 
 type StepperState = {
@@ -14,7 +16,8 @@ type StepperState = {
 type StepperAction =
   | { type: 'ADD_STEPPER'; payload: { title: string } }
   | { type: 'DELETE_STEPPER'; payload: string } // id
-  | { type: 'LOAD_STEPPERS'; payload: StepperState };
+  | { type: 'LOAD_STEPPERS'; payload: StepperState }
+  | { type: 'UPDATE_STEPPER_TODO_COUNTS'; payload: { stepperId: string; total: number; completed: number } };
 
 const initialStepperState: StepperState = {
   steppers: [
@@ -40,6 +43,20 @@ const stepperReducer = (state: StepperState, action: StepperAction): StepperStat
       };
     case 'LOAD_STEPPERS':
       return { ...action.payload };
+    case 'UPDATE_STEPPER_TODO_COUNTS':
+      return {
+        ...state,
+        steppers: state.steppers.map(stepper =>
+          stepper.id === action.payload.stepperId
+            ? {
+                ...stepper,
+                totalTodos: action.payload.total,
+                completedTodos: action.payload.completed,
+                progress: action.payload.total > 0 ? Math.floor((action.payload.completed / action.payload.total) * 100) : 0,
+              }
+            : stepper
+        ),
+      };
     default:
       return state;
   }

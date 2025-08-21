@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert, Keyboard } from 'react-native';
 import { common } from '@/GameStyles/common';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
@@ -15,6 +15,7 @@ export default function AddStepperScreen() {
     }
     stepperDispatch({ type: 'ADD_STEPPER', payload: { title: stepperTitle.trim() } });
     setStepperTitle('');
+    Keyboard.dismiss(); // Dismiss keyboard
     router.back(); // Go back to the home screen
   };
 

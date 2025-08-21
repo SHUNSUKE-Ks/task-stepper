@@ -13,7 +13,7 @@ export default function MemoBar({ value, onChange, onSubmit }: Props) {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { minHeight: 80, textAlignVertical: 'top' }]}
         value={value}
         onChangeText={onChange}
         placeholder="Enter a memo..."
@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    height: 36,
     marginRight: 8,
   },
 });

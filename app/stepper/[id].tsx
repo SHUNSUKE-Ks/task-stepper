@@ -1,10 +1,11 @@
 import { useLocalSearchParams, router } from 'expo-router';
-import { View, Text, Pressable, FlatList, Alert, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, Pressable, FlatList, Alert, ActivityIndicator, TextInput, Keyboard } from 'react-native';
 import { common } from '@/GameStyles/common';
 import React, { useMemo, useState } from 'react';
 import MemoBar from '@/components/MemoBar';
 import TodoRow from '@/components/TodoRow';
 import { useFilter } from '@/contexts/FilterContext';
+import { useStepper } from '@/contexts/StepperContext';
 import { appReducer, initialState } from '@/state/appReducer';
 import { usePersistentReducer } from '@/hooks/usePersistentReducer';
 
@@ -14,6 +15,14 @@ export default function StepperDetail() {
   const storageKey = `stepper-state-${id}`;
   const [state, dispatch, loading] = usePersistentReducer(appReducer, initialState, storageKey);
   const { showOnlyUnchecked } = useFilter();
+  const { stepperDispatch } = useStepper();
+
+  // Update parent stepper's todo counts whenever todos change
+  React.useEffect(() => {
+    const total = state.todos.length;
+    const completed = state.todos.filter(todo => todo.checked).length;
+    stepperDispatch({ type: 'UPDATE_STEPPER_TODO_COUNTS', payload: { stepperId: id as string, total, completed } });
+  }, [state.todos, id, stepperDispatch]);
 
   const [newTodoLabel, setNewTodoLabel] = useState(''); // New state for todo input
 
@@ -39,6 +48,7 @@ export default function StepperDetail() {
     if (!newTodoLabel.trim()) return; // Prevent adding empty todos
     dispatch({ type: 'ADD_TODO', payload: { label: newTodoLabel.trim() } });
     setNewTodoLabel(''); // Clear input after adding
+    Keyboard.dismiss(); // Dismiss keyboard
   };
 
   const filteredTodos = useMemo(() => {
@@ -71,11 +81,12 @@ export default function StepperDetail() {
         {/* New Todo Input */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
           <TextInput
-            style={{ flex: 1, borderColor: '#ddd', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, height: 36, marginRight: 8 }}
+            style={{ flex: 1, borderColor: '#ddd', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, minHeight: 36, marginRight: 8, textAlignVertical: 'top' }}
             placeholder="新しいTODOを追加"
             value={newTodoLabel}
             onChangeText={setNewTodoLabel}
             onSubmitEditing={handleAddTodo} // Add todo on Enter key
+            multiline={true}
           />
           <Pressable style={common.postBtn} onPress={handleAddTodo}>
             <Text style={common.postBtnText}>追加</Text>
